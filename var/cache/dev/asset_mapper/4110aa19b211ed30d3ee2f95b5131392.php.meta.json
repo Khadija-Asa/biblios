@@ -1,0 +1,1 @@
+{"resources":[{"@type":"Symfony\\Component\\Config\\Resource\\FileResource","resource":"/home/khadidja/git/biblios/assets/vendor/bootstrap/bootstrap.index.js"},{"@type":"Symfony\\Component\\Config\\Resource\\FileExistenceResource","resource":"/home/khadidja/git/biblios/assets/vendor/@popperjs/core/core.index.js","exists":true}]}
