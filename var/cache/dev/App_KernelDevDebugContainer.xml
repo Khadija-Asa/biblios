@@ -420,6 +420,44 @@
         <argument type="service" id=".service_locator.TJNRSaV.App\Controller\MainController"/>
       </call>
     </service>
+    <service id="App\Entity\Author" class="App\Entity\Author" autowire="true" autoconfigure="true">
+      <tag name="container.excluded" source="because it's a Doctrine entity"/>
+      <tag name="container.excluded" source="with #[Doctrine\ORM\Mapping\Entity] attribute"/>
+    </service>
+    <service id="App\Entity\Book" class="App\Entity\Book" autowire="true" autoconfigure="true">
+      <tag name="container.excluded" source="because it's a Doctrine entity"/>
+      <tag name="container.excluded" source="with #[Doctrine\ORM\Mapping\Entity] attribute"/>
+    </service>
+    <service id="App\Entity\Comment" class="App\Entity\Comment" autowire="true" autoconfigure="true">
+      <tag name="container.excluded" source="because it's a Doctrine entity"/>
+      <tag name="container.excluded" source="with #[Doctrine\ORM\Mapping\Entity] attribute"/>
+    </service>
+    <service id="App\Entity\Editor" class="App\Entity\Editor" autowire="true" autoconfigure="true">
+      <tag name="container.excluded" source="because it's a Doctrine entity"/>
+      <tag name="container.excluded" source="with #[Doctrine\ORM\Mapping\Entity] attribute"/>
+    </service>
+    <service id="App\Enum\BookStatus" class="App\Enum\BookStatus" autowire="true" autoconfigure="true">
+      <tag name="container.excluded" source="because it's an enum"/>
+    </service>
+    <service id="App\Enum\CommentStatus" class="App\Enum\CommentStatus" autowire="true" autoconfigure="true">
+      <tag name="container.excluded" source="because it's an enum"/>
+    </service>
+    <service id="App\Repository\AuthorRepository" class="App\Repository\AuthorRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
+    <service id="App\Repository\BookRepository" class="App\Repository\BookRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
+    <service id="App\Repository\CommentRepository" class="App\Repository\CommentRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
+    <service id="App\Repository\EditorRepository" class="App\Repository\EditorRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
     <service id="argument_metadata_factory" class="Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadataFactory"/>
     <service id="argument_resolver.backed_enum_resolver" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\BackedEnumValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\BackedEnumValueResolver" priority="100">controller.argument_value_resolver</tag>
@@ -5535,7 +5573,7 @@
     <service id="doctrine.orm.configuration" class="Doctrine\ORM\Configuration" abstract="true"/>
     <service id="doctrine.orm.entity_manager.abstract" class="Doctrine\ORM\EntityManager" lazy="true" abstract="true"/>
     <service id="doctrine.orm.container_repository_factory" class="Doctrine\Bundle\DoctrineBundle\Repository\ContainerRepositoryFactory">
-      <argument type="service" id=".service_locator.dpiLQ5O"/>
+      <argument type="service" id=".service_locator.mk8GD2W"/>
     </service>
     <service id="doctrine.orm.manager_configurator.abstract" class="Doctrine\Bundle\DoctrineBundle\ManagerConfigurator" abstract="true">
       <argument type="collection"/>
@@ -7667,6 +7705,26 @@
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\MainController" class="App\Controller\MainController" autowire="true" abstract="true"/>
     <service id=".instanceof.App\Controller\MainController.0.App\Controller\MainController" class="App\Controller\MainController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\MainController" class="App\Controller\MainController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.App\Entity\Author.0.App\Entity\Author" class="App\Entity\Author" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Entity\Author" class="App\Entity\Author" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.App\Entity\Book.0.App\Entity\Book" class="App\Entity\Book" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Entity\Book" class="App\Entity\Book" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.App\Entity\Comment.0.App\Entity\Comment" class="App\Entity\Comment" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Entity\Comment" class="App\Entity\Comment" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.App\Entity\Editor.0.App\Entity\Editor" class="App\Entity\Editor" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Entity\Editor" class="App\Entity\Editor" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.UnitEnum.0.App\Enum\BookStatus" class="App\Enum\BookStatus" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Enum\BookStatus" class="App\Enum\BookStatus" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.UnitEnum.0.App\Enum\CommentStatus" class="App\Enum\CommentStatus" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Enum\CommentStatus" class="App\Enum\CommentStatus" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\AuthorRepository" class="App\Repository\AuthorRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\AuthorRepository" class="App\Repository\AuthorRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\BookRepository" class="App\Repository\BookRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\BookRepository" class="App\Repository\BookRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\CommentRepository" class="App\Repository\CommentRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\CommentRepository" class="App\Repository\CommentRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\EditorRepository" class="App\Repository\EditorRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\EditorRepository" class="App\Repository\EditorRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".service_locator.ryAvHi4" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -8530,9 +8588,14 @@
         <argument key="turbo.doctrine.event_listener" type="service_closure" id="turbo.doctrine.event_listener"/>
       </argument>
     </service>
-    <service id=".service_locator.dpiLQ5O" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.mk8GD2W" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
-      <argument type="collection"/>
+      <argument type="collection">
+        <argument key="App\Repository\AuthorRepository" type="service_closure" id="App\Repository\AuthorRepository"/>
+        <argument key="App\Repository\BookRepository" type="service_closure" id="App\Repository\BookRepository"/>
+        <argument key="App\Repository\CommentRepository" type="service_closure" id="App\Repository\CommentRepository"/>
+        <argument key="App\Repository\EditorRepository" type="service_closure" id="App\Repository\EditorRepository"/>
+      </argument>
     </service>
     <service id=".service_locator.W55Po6X" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
@@ -8884,6 +8947,10 @@
       <argument type="collection">
         <argument key="reverse_container" type="service_closure" id="reverse_container" on-invalid="ignore_uninitialized"/>
       </argument>
+    </service>
+    <service id=".service_locator.dpiLQ5O" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection"/>
     </service>
     <service id=".service_locator.6eloqTE" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
