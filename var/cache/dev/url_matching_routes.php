@@ -15,6 +15,12 @@ return [
         '/_profiler/phpinfo' => [[['_route' => '_profiler_phpinfo', '_controller' => 'web_profiler.controller.profiler::phpinfoAction'], null, null, null, false, false, null]],
         '/_profiler/xdebug' => [[['_route' => '_profiler_xdebug', '_controller' => 'web_profiler.controller.profiler::xdebugAction'], null, null, null, false, false, null]],
         '/_profiler/open' => [[['_route' => '_profiler_open_file', '_controller' => 'web_profiler.controller.profiler::openAction'], null, null, null, false, false, null]],
+        '/admin/author' => [[['_route' => 'app_admin_author_index', '_controller' => 'App\\Controller\\Admin\\AuthorController::index'], null, ['GET' => 0], null, false, false, null]],
+        '/admin/author/new' => [[['_route' => 'app_admin_author_new', '_controller' => 'App\\Controller\\Admin\\AuthorController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        '/admin/book' => [[['_route' => 'app_admin_book_index', '_controller' => 'App\\Controller\\Admin\\BookController::index'], null, ['GET' => 0], null, false, false, null]],
+        '/admin/book/new' => [[['_route' => 'app_admin_book_new', '_controller' => 'App\\Controller\\Admin\\BookController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        '/admin/editor' => [[['_route' => 'app_admin_editor_index', '_controller' => 'App\\Controller\\Admin\\EditorController::index'], null, ['GET' => 0], null, false, false, null]],
+        '/admin/editor/new' => [[['_route' => 'app_admin_editor_new', '_controller' => 'App\\Controller\\Admin\\EditorController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/' => [[['_route' => 'app_main', '_controller' => 'App\\Controller\\MainController::index'], null, null, null, false, false, null]],
     ],
     [ // $regexpList
