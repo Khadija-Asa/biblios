@@ -116,7 +116,7 @@ class TwigExtraConfig implements \Symfony\Component\Config\Builder\ConfigBuilder
     /**
      * @template TValue of array|bool
      * @param TValue $value
-     * @default {"enabled":false}
+     * @default {"enabled":true}
      * @return \Symfony\Config\TwigExtra\IntlConfig|$this
      * @psalm-return (TValue is array ? \Symfony\Config\TwigExtra\IntlConfig : static)
      * @deprecated since Symfony 7.4
