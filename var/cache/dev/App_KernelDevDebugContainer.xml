@@ -26,6 +26,8 @@
       <parameter key="MonologBundle">Symfony\Bundle\MonologBundle\MonologBundle</parameter>
       <parameter key="MakerBundle">Symfony\Bundle\MakerBundle\MakerBundle</parameter>
       <parameter key="BabDevPagerfantaBundle">BabDev\PagerfantaBundle\BabDevPagerfantaBundle</parameter>
+      <parameter key="DoctrineFixturesBundle">Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle</parameter>
+      <parameter key="ZenstruckFoundryBundle">Zenstruck\Foundry\ZenstruckFoundryBundle</parameter>
     </parameter>
     <parameter key="kernel.bundles_metadata" type="collection">
       <parameter key="FrameworkBundle" type="collection">
@@ -80,6 +82,14 @@
         <parameter key="path">/home/khadidja/git/biblios/vendor/babdev/pagerfanta-bundle</parameter>
         <parameter key="namespace">BabDev\PagerfantaBundle</parameter>
       </parameter>
+      <parameter key="DoctrineFixturesBundle" type="collection">
+        <parameter key="path">/home/khadidja/git/biblios/vendor/doctrine/doctrine-fixtures-bundle</parameter>
+        <parameter key="namespace">Doctrine\Bundle\FixturesBundle</parameter>
+      </parameter>
+      <parameter key="ZenstruckFoundryBundle" type="collection">
+        <parameter key="path">/home/khadidja/git/biblios/vendor/zenstruck/foundry</parameter>
+        <parameter key="namespace">Zenstruck\Foundry</parameter>
+      </parameter>
     </parameter>
     <parameter key="kernel.charset">UTF-8</parameter>
     <parameter key="kernel.container_class">App_KernelDevDebugContainer</parameter>
@@ -130,6 +140,14 @@
       </parameter>
       <parameter key="BabDev\PagerfantaBundle\BabDevPagerfantaBundle" type="collection">
         <parameter key="all">true</parameter>
+      </parameter>
+      <parameter key="Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle" type="collection">
+        <parameter key="dev">true</parameter>
+        <parameter key="test">true</parameter>
+      </parameter>
+      <parameter key="Zenstruck\Foundry\ZenstruckFoundryBundle" type="collection">
+        <parameter key="dev">true</parameter>
+        <parameter key="test">true</parameter>
       </parameter>
     </parameter>
     <parameter key="event_dispatcher.event_aliases" type="collection">
@@ -291,7 +309,22 @@
     <parameter key="twig.default_path">/home/khadidja/git/biblios/templates</parameter>
     <parameter key="web_profiler.debug_toolbar.intercept_redirects">false</parameter>
     <parameter key="web_profiler.debug_toolbar.mode">2</parameter>
-    <parameter key="security.role_hierarchy.roles" type="collection"/>
+    <parameter key="security.role_hierarchy.roles" type="collection">
+      <parameter key="ROLE_USER" type="collection"/>
+      <parameter key="ROLE_MODERATEUR" type="collection">
+        <parameter>ROLE_USER</parameter>
+      </parameter>
+      <parameter key="ROLE_AJOUT_DE_LIVRE" type="collection">
+        <parameter>ROLE_USER</parameter>
+      </parameter>
+      <parameter key="ROLE_EDITION_DE_LIVRE" type="collection">
+        <parameter>ROLE_AJOUT_DE_LIVRE</parameter>
+      </parameter>
+      <parameter key="ROLE_ADMIN" type="collection">
+        <parameter>ROLE_MODERATEUR</parameter>
+        <parameter>ROLE_EDITION_DE_LIVRE</parameter>
+      </parameter>
+    </parameter>
     <parameter key="security.access.denied_url">null</parameter>
     <parameter key="security.authentication.manager.erase_credentials">true</parameter>
     <parameter key="security.authentication.session_strategy.strategy">migrate</parameter>
@@ -319,6 +352,9 @@
         </parameter>
       </parameter>
     </parameter>
+    <parameter key="zenstruck_foundry.faker.seed">null</parameter>
+    <parameter key="zenstruck_foundry.persistence.flush_once">true</parameter>
+    <parameter key="zenstruck_foundry.enable_auto_refresh_with_lazy_objects">false</parameter>
     <parameter key="data_collector.templates" type="collection">
       <parameter key="data_collector.request" type="collection">
         <parameter>request</parameter>
@@ -445,6 +481,14 @@
         <argument type="service" id=".service_locator.TJNRSaV.App\Controller\Admin\EditorController"/>
       </call>
     </service>
+    <service id="App\Controller\Admin\MainController" class="App\Controller\Admin\MainController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="routing.controller"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.TJNRSaV.App\Controller\Admin\MainController"/>
+      </call>
+    </service>
     <service id="App\Controller\BookController" class="App\Controller\BookController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <tag name="routing.controller"/>
@@ -460,6 +504,25 @@
       <call method="setContainer">
         <argument type="service" id=".service_locator.TJNRSaV.App\Controller\MainController"/>
       </call>
+    </service>
+    <service id="App\Controller\RegistrationController" class="App\Controller\RegistrationController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="routing.controller"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.TJNRSaV.App\Controller\RegistrationController"/>
+      </call>
+    </service>
+    <service id="App\Controller\SecurityController" class="App\Controller\SecurityController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="routing.controller"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.TJNRSaV.App\Controller\SecurityController"/>
+      </call>
+    </service>
+    <service id="App\DataFixtures\AppFixtures" class="App\DataFixtures\AppFixtures" autowire="true" autoconfigure="true">
+      <tag name="doctrine.fixture.orm"/>
     </service>
     <service id="App\Entity\Author" class="App\Entity\Author" autowire="true" autoconfigure="true">
       <tag name="container.excluded" source="because it's a Doctrine entity"/>
@@ -477,11 +540,39 @@
       <tag name="container.excluded" source="because it's a Doctrine entity"/>
       <tag name="container.excluded" source="with #[Doctrine\ORM\Mapping\Entity] attribute"/>
     </service>
+    <service id="App\Entity\User" class="App\Entity\User" autowire="true" autoconfigure="true">
+      <tag name="container.excluded" source="because it's a Doctrine entity"/>
+      <tag name="container.excluded" source="with #[Doctrine\ORM\Mapping\Entity] attribute"/>
+    </service>
     <service id="App\Enum\BookStatus" class="App\Enum\BookStatus" autowire="true" autoconfigure="true">
       <tag name="container.excluded" source="because it's an enum"/>
     </service>
     <service id="App\Enum\CommentStatus" class="App\Enum\CommentStatus" autowire="true" autoconfigure="true">
       <tag name="container.excluded" source="because it's an enum"/>
+    </service>
+    <service id="App\EventListener\LastConnectionListener" class="App\EventListener\LastConnectionListener" autowire="true" autoconfigure="true">
+      <tag name="kernel.event_listener" event="security.interactive_login" method="onSecurityInteractiveLogin" priority="0" dispatcher=""/>
+      <argument type="service" id="doctrine.orm.default_entity_manager"/>
+    </service>
+    <service id="App\EventListener\MaintenanceListener" class="App\EventListener\MaintenanceListener" autowire="true" autoconfigure="true">
+      <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="2000" dispatcher=""/>
+      <tag name="container.hot_path"/>
+      <argument type="service" id="twig"/>
+    </service>
+    <service id="App\Factory\AuthorFactory" class="App\Factory\AuthorFactory" autowire="true" autoconfigure="true">
+      <tag name="container.error" message="Class &quot;Zenstruck\Foundry\ModelFactory&quot; not found while loading &quot;App\Factory\AuthorFactory&quot;."/>
+    </service>
+    <service id="App\Factory\BookFactory" class="App\Factory\BookFactory" autowire="true" autoconfigure="true">
+      <tag name="container.error" message="Class &quot;Zenstruck\Foundry\ModelFactory&quot; not found while loading &quot;App\Factory\BookFactory&quot;."/>
+    </service>
+    <service id="App\Factory\CommentFactory" class="App\Factory\CommentFactory" autowire="true" autoconfigure="true">
+      <tag name="container.error" message="Class &quot;Zenstruck\Foundry\ModelFactory&quot; not found while loading &quot;App\Factory\CommentFactory&quot;."/>
+    </service>
+    <service id="App\Factory\EditorFactory" class="App\Factory\EditorFactory" autowire="true" autoconfigure="true">
+      <tag name="container.error" message="Class &quot;Zenstruck\Foundry\ModelFactory&quot; not found while loading &quot;App\Factory\EditorFactory&quot;."/>
+    </service>
+    <service id="App\Factory\UserFactory" class="App\Factory\UserFactory" autowire="true" autoconfigure="true">
+      <tag name="container.error" message="Class &quot;Zenstruck\Foundry\ModelFactory&quot; not found while loading &quot;App\Factory\UserFactory&quot;."/>
     </service>
     <service id="App\Form\AuthorType" class="App\Form\AuthorType" autowire="true" autoconfigure="true">
       <tag name="form.type" csrf_token_id="%.form.type_extension.csrf.token_id%"/>
@@ -490,6 +581,9 @@
       <tag name="form.type" csrf_token_id="%.form.type_extension.csrf.token_id%"/>
     </service>
     <service id="App\Form\EditorType" class="App\Form\EditorType" autowire="true" autoconfigure="true">
+      <tag name="form.type" csrf_token_id="%.form.type_extension.csrf.token_id%"/>
+    </service>
+    <service id="App\Form\RegistrationFormType" class="App\Form\RegistrationFormType" autowire="true" autoconfigure="true">
       <tag name="form.type" csrf_token_id="%.form.type_extension.csrf.token_id%"/>
     </service>
     <service id="App\Repository\AuthorRepository" class="App\Repository\AuthorRepository" autowire="true" autoconfigure="true">
@@ -507,6 +601,21 @@
     <service id="App\Repository\EditorRepository" class="App\Repository\EditorRepository" autowire="true" autoconfigure="true">
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
+    </service>
+    <service id="App\Repository\UserRepository" class="App\Repository\UserRepository" autowire="true" autoconfigure="true">
+      <tag name="doctrine.repository_service"/>
+      <argument type="service" id="doctrine"/>
+    </service>
+    <service id="App\Security\Voter\BookCreatorVoter" class="App\Security\Voter\BookCreatorVoter" autowire="true" autoconfigure="true">
+      <tag name="security.voter"/>
+    </service>
+    <service id="App\Story\AppStory" class="App\Story\AppStory" autowire="true" autoconfigure="true">
+      <tag name="foundry.story.fixture">
+        <attribute name="name">main</attribute>
+        <attribute name="groups">
+        </attribute>
+      </tag>
+      <tag name="foundry.story"/>
     </service>
     <service id="argument_metadata_factory" class="Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadataFactory"/>
     <service id="argument_resolver.backed_enum_resolver" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\BackedEnumValueResolver">
@@ -536,7 +645,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver" priority="-50">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.EkHMA4H"/>
+      <argument type="service" id=".service_locator.y5Bx.Ai"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver" priority="-100">controller.argument_value_resolver</tag>
@@ -1539,6 +1648,7 @@
         <argument>App\Form\AuthorType</argument>
         <argument>App\Form\BookType</argument>
         <argument>App\Form\EditorType</argument>
+        <argument>App\Form\RegistrationFormType</argument>
         <argument>Symfony\Component\Form\Extension\Core\Type\FormType</argument>
         <argument>Symfony\Component\Form\Extension\Core\Type\ChoiceType</argument>
         <argument>Symfony\Component\Form\Extension\Core\Type\FileType</argument>
@@ -2661,6 +2771,8 @@
           <argument>/home/khadidja/git/biblios/vendor/symfony/security-bundle/translations</argument>
           <argument>/home/khadidja/git/biblios/vendor/symfony/monolog-bundle/src/translations</argument>
           <argument>/home/khadidja/git/biblios/vendor/symfony/maker-bundle/translations</argument>
+          <argument>/home/khadidja/git/biblios/vendor/doctrine/doctrine-fixtures-bundle/translations</argument>
+          <argument>/home/khadidja/git/biblios/vendor/zenstruck/foundry/translations</argument>
         </argument>
         <argument key="cache_vary" type="collection">
           <argument key="scanned_directories" type="collection">
@@ -2681,6 +2793,8 @@
             <argument>vendor/symfony/security-bundle/translations</argument>
             <argument>vendor/symfony/monolog-bundle/src/translations</argument>
             <argument>vendor/symfony/maker-bundle/translations</argument>
+            <argument>vendor/doctrine/doctrine-fixtures-bundle/translations</argument>
+            <argument>vendor/zenstruck/foundry/translations</argument>
           </argument>
         </argument>
       </argument>
@@ -3037,6 +3151,22 @@
       <argument type="service" id="monolog.logger.event" on-invalid="null"/>
       <argument type="service" id=".virtual_request_stack" on-invalid="null"/>
       <argument type="service" id="profiler.is_disabled_state_checker" on-invalid="null"/>
+      <call method="addListener">
+        <argument>security.interactive_login</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="App\EventListener\LastConnectionListener"/>
+          <argument>onSecurityInteractiveLogin</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>kernel.request</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="App\EventListener\MaintenanceListener"/>
+          <argument>onKernelRequest</argument>
+        </argument>
+        <argument>2000</argument>
+      </call>
       <call method="addListener">
         <argument>kernel.response</argument>
         <argument type="collection">
@@ -3699,7 +3829,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.EkHMA4H"/>
+      <argument type="service" id=".service_locator.y5Bx.Ai"/>
     </service>
     <service id="debug.log_processor" class="Symfony\Bridge\Monolog\Processor\DebugProcessor">
       <tag name="kernel.reset" method="reset"/>
@@ -3784,8 +3914,11 @@
         <argument>App\Controller\Admin\AuthorController</argument>
         <argument>App\Controller\Admin\BookController</argument>
         <argument>App\Controller\Admin\EditorController</argument>
+        <argument>App\Controller\Admin\MainController</argument>
         <argument>App\Controller\BookController</argument>
         <argument>App\Controller\MainController</argument>
+        <argument>App\Controller\RegistrationController</argument>
+        <argument>App\Controller\SecurityController</argument>
       </argument>
     </service>
     <service id="routing.loader.attribute.directory" class="Symfony\Component\Routing\Loader\AttributeDirectoryLoader">
@@ -4320,7 +4453,7 @@
       <argument type="service" id="form.registry"/>
     </service>
     <service id="form.extension" class="Symfony\Component\Form\Extension\DependencyInjection\DependencyInjectionExtension">
-      <argument type="service" id=".service_locator.271EfPH"/>
+      <argument type="service" id=".service_locator.DnFTnaX"/>
       <argument type="collection">
         <argument key="Symfony\Component\Form\Extension\Core\Type\FormType" type="iterator">
           <argument type="service" id="form.type_extension.form.transformation_failure_handling"/>
@@ -4432,6 +4565,7 @@
         <argument key="App\Form\AuthorType">submit</argument>
         <argument key="App\Form\BookType">submit</argument>
         <argument key="App\Form\EditorType">submit</argument>
+        <argument key="App\Form\RegistrationFormType">submit</argument>
       </argument>
     </service>
     <service id="validator.builder" class="Symfony\Component\Validator\ValidatorBuilder">
@@ -5694,7 +5828,7 @@
     <service id="doctrine.orm.configuration" class="Doctrine\ORM\Configuration" abstract="true"/>
     <service id="doctrine.orm.entity_manager.abstract" class="Doctrine\ORM\EntityManager" lazy="true" abstract="true"/>
     <service id="doctrine.orm.container_repository_factory" class="Doctrine\Bundle\DoctrineBundle\Repository\ContainerRepositoryFactory">
-      <argument type="service" id=".service_locator.mk8GD2W"/>
+      <argument type="service" id=".service_locator.9ZxtI0f"/>
     </service>
     <service id="doctrine.orm.manager_configurator.abstract" class="Doctrine\Bundle\DoctrineBundle\ManagerConfigurator" abstract="true">
       <argument type="collection"/>
@@ -6867,7 +7001,7 @@
       <argument type="service" id=".service_locator.rAuPNI6"/>
       <argument type="collection">
         <argument key="dev">null</argument>
-        <argument key="main">null</argument>
+        <argument key="main" type="service" id=".service_locator.567piEK"/>
       </argument>
     </service>
     <service id="security.user_value_resolver" class="Symfony\Component\Security\Http\Controller\UserValueResolver">
@@ -6899,14 +7033,15 @@
       <argument type="service" id="request_stack"/>
     </service>
     <service id="security.role_hierarchy" class="Symfony\Component\Security\Core\Role\RoleHierarchy">
-      <argument type="collection"/>
-    </service>
-    <service id="security.access.simple_role_voter" class="Symfony\Component\Security\Core\Authorization\Voter\RoleVoter">
-      <tag name="security.voter" priority="245"/>
+      <argument>%security.role_hierarchy.roles%</argument>
     </service>
     <service id="security.access.authenticated_voter" class="Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter">
       <tag name="security.voter" priority="250"/>
       <argument type="service" id="security.authentication.trust_resolver"/>
+    </service>
+    <service id="security.access.role_hierarchy_voter" class="Symfony\Component\Security\Core\Authorization\Voter\RoleHierarchyVoter">
+      <tag name="security.voter" priority="245"/>
+      <argument type="service" id="security.role_hierarchy"/>
     </service>
     <service id="security.access.expression_voter" class="Symfony\Component\Security\Core\Authorization\Voter\ExpressionVoter">
       <tag name="security.voter" priority="245"/>
@@ -6927,7 +7062,7 @@
     <service id="security.firewall.map" class="Symfony\Bundle\SecurityBundle\Security\FirewallMap">
       <argument type="service" id=".service_locator.Bz.C4As"/>
       <argument type="iterator">
-        <argument key="security.firewall.map.context.dev" type="service" id=".security.request_matcher.QZDP5mD"/>
+        <argument key="security.firewall.map.context.dev" type="service" id=".security.request_matcher.gOpgIHx"/>
         <argument key="security.firewall.map.context.main">null</argument>
       </argument>
     </service>
@@ -6963,6 +7098,14 @@
       <argument type="service" id="request_stack" on-invalid="null"/>
       <argument type="service" id="router.default" on-invalid="null"/>
       <argument type="service" id="security.token_storage" on-invalid="null"/>
+      <call method="registerListener">
+        <argument>main</argument>
+        <argument>app_logout</argument>
+        <argument>logout</argument>
+        <argument>_csrf_token</argument>
+        <argument>null</argument>
+        <argument>null</argument>
+      </call>
     </service>
     <service id="security.route_loader.logout" class="Symfony\Bundle\SecurityBundle\Routing\LogoutRouteLoader">
       <tag name="routing.route_loader"/>
@@ -7072,12 +7215,20 @@
         </service>
       </argument>
     </service>
-    <service id="security.access_map" class="Symfony\Component\Security\Http\AccessMap"/>
+    <service id="security.access_map" class="Symfony\Component\Security\Http\AccessMap">
+      <call method="add">
+        <argument type="service" id=".security.request_matcher.SVK5D2B"/>
+        <argument type="collection">
+          <argument>IS_AUTHENTICATED</argument>
+        </argument>
+        <argument>null</argument>
+      </call>
+    </service>
     <service id="security.context_listener" class="Symfony\Component\Security\Http\Firewall\ContextListener">
       <tag name="monolog.logger" channel="security"/>
       <argument type="service" id="security.untracked_token_storage"/>
       <argument type="iterator">
-        <argument type="service" id="security.user.provider.concrete.users_in_memory"/>
+        <argument type="service" id="security.user.provider.concrete.app_user_provider"/>
       </argument>
       <argument type="abstract">Provider Key</argument>
       <argument type="service" id="monolog.logger.security" on-invalid="null"/>
@@ -7203,7 +7354,7 @@
     </service>
     <service id="security.listener.user_provider" class="Symfony\Component\Security\Http\EventListener\UserProviderListener">
       <tag name="kernel.event_listener" event="Symfony\Component\Security\Http\Event\CheckPassportEvent" priority="1024" method="checkPassport"/>
-      <argument type="service" id="security.user.provider.concrete.users_in_memory"/>
+      <argument type="service" id="security.user.provider.concrete.app_user_provider"/>
     </service>
     <service id="security.listener.user_provider.abstract" class="Symfony\Component\Security\Http\EventListener\UserProviderListener" abstract="true">
       <argument type="abstract">user provider</argument>
@@ -7431,7 +7582,9 @@
       <argument type="service" id=".service_locator.Bz.C4As"/>
       <argument type="service" id=".service_locator.GW5y7PS"/>
       <argument type="collection">
-        <argument key="main" type="collection"/>
+        <argument key="main" type="collection">
+          <argument type="service" id="debug.security.authenticator.form_login.main"/>
+        </argument>
       </argument>
       <argument>false</argument>
       <call method="setName">
@@ -7441,13 +7594,16 @@
         <argument>Display information about your security firewall(s)</argument>
       </call>
     </service>
-    <service id="security.user.provider.concrete.users_in_memory" class="Symfony\Component\Security\Core\User\InMemoryUserProvider">
-      <argument type="collection"/>
+    <service id="security.user.provider.concrete.app_user_provider" class="Symfony\Bridge\Doctrine\Security\User\EntityUserProvider">
+      <argument type="service" id="doctrine"/>
+      <argument>App\Entity\User</argument>
+      <argument>email</argument>
+      <argument>null</argument>
     </service>
     <service id="security.firewall.map.config.dev" class="Symfony\Bundle\SecurityBundle\Security\FirewallConfig">
       <argument>dev</argument>
       <argument>security.user_checker</argument>
-      <argument>.security.request_matcher.QZDP5mD</argument>
+      <argument>.security.request_matcher.gOpgIHx</argument>
       <argument>false</argument>
       <argument>false</argument>
       <argument>null</argument>
@@ -7459,12 +7615,12 @@
       <argument>null</argument>
       <argument>null</argument>
     </service>
-    <service id=".security.request_matcher.dxczy6O" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
-      <argument>^/(_profiler|_wdt|assets|build)/</argument>
+    <service id=".security.request_matcher.kQIRvor" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
+      <argument>^/(_(profiler|wdt)|css|images|js)/</argument>
     </service>
-    <service id=".security.request_matcher.QZDP5mD" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
+    <service id=".security.request_matcher.gOpgIHx" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
       <argument type="collection">
-        <argument type="service" id=".security.request_matcher.dxczy6O"/>
+        <argument type="service" id=".security.request_matcher.kQIRvor"/>
       </argument>
     </service>
     <service id="security.firewall.map.context.dev" class="Symfony\Bundle\SecurityBundle\Security\FirewallContext">
@@ -7479,18 +7635,29 @@
       <argument>null</argument>
       <argument>true</argument>
       <argument>false</argument>
-      <argument>security.user.provider.concrete.users_in_memory</argument>
+      <argument>security.user.provider.concrete.app_user_provider</argument>
       <argument>main</argument>
+      <argument>security.authenticator.form_login.main</argument>
       <argument>null</argument>
       <argument>null</argument>
+      <argument type="collection">
+        <argument>form_login</argument>
+      </argument>
       <argument>null</argument>
-      <argument type="collection"/>
-      <argument>null</argument>
-      <argument>null</argument>
+      <argument type="collection">
+        <argument key="path">app_logout</argument>
+        <argument key="target">app_main</argument>
+        <argument key="enable_csrf">null</argument>
+        <argument key="csrf_token_id">logout</argument>
+        <argument key="csrf_parameter">_csrf_token</argument>
+        <argument key="invalidate_session">true</argument>
+        <argument key="clear_site_data" type="collection"/>
+        <argument key="delete_cookies" type="collection"/>
+      </argument>
     </service>
     <service id="security.listener.main.user_provider" class="Symfony\Component\Security\Http\EventListener\UserProviderListener">
       <tag name="kernel.event_listener" dispatcher="debug.security.event_dispatcher.main" event="Symfony\Component\Security\Http\Event\CheckPassportEvent" priority="2048" method="checkPassport"/>
-      <argument type="service" id="security.user.provider.concrete.users_in_memory"/>
+      <argument type="service" id="security.user.provider.concrete.app_user_provider"/>
     </service>
     <service id="security.user_checker.chain.main" class="Symfony\Component\Security\Core\User\ChainUserChecker">
       <argument type="tagged_iterator" tag="security.user_checker.main"/>
@@ -7500,7 +7667,7 @@
       <tag name="container.hot_path"/>
       <argument type="service" id="security.untracked_token_storage"/>
       <argument type="iterator">
-        <argument type="service" id="security.user.provider.concrete.users_in_memory"/>
+        <argument type="service" id="security.user.provider.concrete.app_user_provider"/>
       </argument>
       <argument>main</argument>
       <argument type="service" id="monolog.logger.security" on-invalid="null"/>
@@ -7515,9 +7682,81 @@
       <tag name="kernel.event_subscriber" dispatcher="debug.security.event_dispatcher.main"/>
       <argument type="service" id="security.authentication.session_strategy"/>
     </service>
+    <service id="security.logout_listener.main" class="Symfony\Component\Security\Http\Firewall\LogoutListener">
+      <argument type="service" id="security.token_storage"/>
+      <argument type="service" id="security.http_utils"/>
+      <argument type="service" id="debug.security.event_dispatcher.main"/>
+      <argument type="collection">
+        <argument key="csrf_parameter">_csrf_token</argument>
+        <argument key="csrf_token_id">logout</argument>
+        <argument key="logout_path">app_logout</argument>
+      </argument>
+    </service>
+    <service id="security.logout.listener.default.main" class="Symfony\Component\Security\Http\EventListener\DefaultLogoutListener">
+      <tag name="kernel.event_subscriber" dispatcher="debug.security.event_dispatcher.main"/>
+      <argument type="service" id="security.http_utils"/>
+      <argument>app_main</argument>
+    </service>
+    <service id="security.logout.listener.session.main" class="Symfony\Component\Security\Http\EventListener\SessionLogoutListener">
+      <tag name="kernel.event_subscriber" dispatcher="debug.security.event_dispatcher.main"/>
+    </service>
+    <service id="security.authenticator.form_login.main" class="Symfony\Component\Security\Http\Authenticator\FormLoginAuthenticator">
+      <argument type="service" id="security.http_utils"/>
+      <argument type="service" id="security.user.provider.concrete.app_user_provider"/>
+      <argument type="service" id="security.authentication.success_handler.main.form_login"/>
+      <argument type="service" id="security.authentication.failure_handler.main.form_login"/>
+      <argument type="collection">
+        <argument key="login_path">app_login</argument>
+        <argument key="check_path">app_login</argument>
+        <argument key="enable_csrf">true</argument>
+        <argument key="use_forward">false</argument>
+        <argument key="username_parameter">_username</argument>
+        <argument key="password_parameter">_password</argument>
+        <argument key="csrf_parameter">_csrf_token</argument>
+        <argument key="csrf_token_id">authenticate</argument>
+        <argument key="post_only">true</argument>
+        <argument key="form_only">false</argument>
+      </argument>
+    </service>
+    <service id="security.authentication.success_handler.main.form_login" class="Symfony\Component\Security\Http\Authentication\DefaultAuthenticationSuccessHandler">
+      <argument type="service" id="security.http_utils"/>
+      <argument type="collection"/>
+      <argument type="service" id="monolog.logger" on-invalid="null"/>
+      <call method="setOptions">
+        <argument type="collection">
+          <argument key="login_path">app_login</argument>
+          <argument key="always_use_default_target_path">false</argument>
+          <argument key="default_target_path">/</argument>
+          <argument key="target_path_parameter">_target_path</argument>
+          <argument key="use_referer">false</argument>
+        </argument>
+      </call>
+      <call method="setFirewallName">
+        <argument>main</argument>
+      </call>
+    </service>
+    <service id="security.authentication.failure_handler.main.form_login" class="Symfony\Component\Security\Http\Authentication\DefaultAuthenticationFailureHandler">
+      <argument type="service" id="http_kernel"/>
+      <argument type="service" id="security.http_utils"/>
+      <argument type="collection"/>
+      <argument type="service" id="monolog.logger.security" on-invalid="null"/>
+      <call method="setOptions">
+        <argument type="collection">
+          <argument key="login_path">app_login</argument>
+          <argument key="failure_path">null</argument>
+          <argument key="failure_forward">false</argument>
+          <argument key="failure_path_parameter">_failure_path</argument>
+        </argument>
+      </call>
+    </service>
+    <service id="debug.security.authenticator.form_login.main" class="Symfony\Component\Security\Http\Authenticator\Debug\TraceableAuthenticator">
+      <argument type="service" id="security.authenticator.form_login.main"/>
+    </service>
     <service id="security.authenticator.manager.main" class="Symfony\Component\Security\Http\Authentication\AuthenticatorManager">
       <tag name="monolog.logger" channel="security"/>
-      <argument type="collection"/>
+      <argument type="collection">
+        <argument type="service" id="debug.security.authenticator.form_login.main"/>
+      </argument>
       <argument type="service" id="security.token_storage"/>
       <argument type="service" id="debug.security.event_dispatcher.main"/>
       <argument>main</argument>
@@ -7540,11 +7779,17 @@
       <argument type="service" id="security.authentication.trust_resolver"/>
       <argument type="service" id="security.http_utils"/>
       <argument>main</argument>
-      <argument>null</argument>
+      <argument type="service" id="security.authenticator.form_login.main"/>
       <argument>null</argument>
       <argument>null</argument>
       <argument type="service" id="monolog.logger.security" on-invalid="null"/>
       <argument>false</argument>
+    </service>
+    <service id=".service_locator.567piEK" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="security.authenticator.form_login.main" type="service_closure" id="security.authenticator.form_login.main"/>
+      </argument>
     </service>
     <service id="security.firewall.map.context.main" class="Symfony\Bundle\SecurityBundle\Security\LazyFirewallContext">
       <argument type="iterator">
@@ -7554,7 +7799,7 @@
         <argument type="service" id="security.access_listener"/>
       </argument>
       <argument type="service" id="security.exception_listener.main"/>
-      <argument>null</argument>
+      <argument type="service" id="security.logout_listener.main"/>
       <argument type="service" id="security.firewall.map.config.main"/>
       <argument type="service" id="security.untracked_token_storage"/>
     </service>
@@ -7563,6 +7808,14 @@
       <argument type="collection">
         <argument key="security.firewall.map.context.dev" type="service_closure" id="security.firewall.map.context.dev"/>
         <argument key="security.firewall.map.context.main" type="service_closure" id="security.firewall.map.context.main"/>
+      </argument>
+    </service>
+    <service id=".security.request_matcher.pqyCXG8" class="Symfony\Component\HttpFoundation\RequestMatcher\PathRequestMatcher">
+      <argument>^/admin</argument>
+    </service>
+    <service id=".security.request_matcher.SVK5D2B" class="Symfony\Component\HttpFoundation\ChainRequestMatcher">
+      <argument type="collection">
+        <argument type="service" id=".security.request_matcher.pqyCXG8"/>
       </argument>
     </service>
     <service id="security.command.user_password_hash" class="Symfony\Component\PasswordHasher\Command\UserPasswordHashCommand">
@@ -7914,6 +8167,167 @@
     <service id="pagerfanta.event_listener.convert_not_valid_current_page_to_not_found" class="BabDev\PagerfantaBundle\EventListener\ConvertNotValidMaxPerPageToNotFoundListener">
       <tag name="kernel.event_listener" event="kernel.exception" method="onKernelException" priority="512"/>
     </service>
+    <service id="doctrine.fixtures_load_command" class="Doctrine\Bundle\FixturesBundle\Command\LoadDataFixturesDoctrineCommand">
+      <tag name="console.command" command="doctrine:fixtures:load"/>
+      <tag name="container.no_preload"/>
+      <argument type="service" id="doctrine.fixtures.loader"/>
+      <argument type="service" id="doctrine"/>
+      <argument type="collection">
+        <argument key="default" type="service" id="doctrine.fixtures.purger.orm_purger_factory"/>
+      </argument>
+      <call method="setName">
+        <argument>doctrine:fixtures:load</argument>
+      </call>
+    </service>
+    <service id="doctrine.fixtures.loader" class="Doctrine\Bundle\FixturesBundle\Loader\SymfonyFixturesLoader">
+      <call method="addFixtures">
+        <argument type="collection">
+          <argument type="collection">
+            <argument key="fixture" type="service" id="App\DataFixtures\AppFixtures"/>
+            <argument key="groups" type="collection"/>
+          </argument>
+        </argument>
+      </call>
+    </service>
+    <service id="doctrine.fixtures.purger.orm_purger_factory" class="Doctrine\Bundle\FixturesBundle\Purger\ORMPurgerFactory">
+      <tag name="doctrine.fixtures.purger_factory" alias="default"/>
+    </service>
+    <service id=".zenstruck_foundry.faker" class="Faker\Generator">
+      <argument>fr_FR</argument>
+      <factory class="Faker\Factory" method="create"/>
+    </service>
+    <service id=".zenstruck_foundry.story_registry" class="Zenstruck\Foundry\StoryRegistry">
+      <argument type="tagged_iterator" tag="foundry.story"/>
+      <argument type="collection"/>
+    </service>
+    <service id=".zenstruck_foundry.instantiator" class="Zenstruck\Foundry\Object\Instantiator" constructor="withConstructor"/>
+    <service id=".zenstruck_foundry.configuration" class="Zenstruck\Foundry\Configuration" public="true">
+      <argument type="service" id=".zenstruck_foundry.in_memory.factory_registry"/>
+      <argument type="service" id=".zenstruck_foundry.faker"/>
+      <argument type="service" id=".zenstruck_foundry.instantiator"/>
+      <argument type="service" id=".zenstruck_foundry.story_registry"/>
+      <argument type="service" id=".zenstruck_foundry.persistence_manager" on-invalid="null"/>
+      <argument>true</argument>
+      <argument>null</argument>
+      <argument>%env(default::int:FOUNDRY_FAKER_SEED)%</argument>
+      <argument type="service" id=".zenstruck_foundry.in_memory.repository_registry"/>
+      <argument>null</argument>
+      <argument>false</argument>
+      <argument type="service" id="debug.event_dispatcher" on-invalid="null"/>
+    </service>
+    <service id=".zenstruck_foundry.maker.story" class="Zenstruck\Foundry\Maker\MakeStory">
+      <tag name="maker.command"/>
+      <argument type="service" id=".zenstruck_foundry.maker.namespace_guesser"/>
+      <argument>Story</argument>
+    </service>
+    <service id=".zenstruck_foundry.maker.factory" class="Zenstruck\Foundry\Maker\MakeFactory">
+      <tag name="maker.command"/>
+      <argument type="service" id="kernel"/>
+      <argument type="service" id=".zenstruck_foundry.maker.factory.generator"/>
+      <argument type="service" id=".zenstruck_foundry.maker.factory.autoCompleter"/>
+      <argument type="service" id=".zenstruck_foundry.maker.factory.candidate_classes_extractor"/>
+      <argument>Factory</argument>
+      <argument>true</argument>
+    </service>
+    <service id=".zenstruck_foundry.maker.factory.orm_default_properties_guesser" class="Zenstruck\Foundry\Maker\Factory\ORMDefaultPropertiesGuesser">
+      <tag name="foundry.make_factory.default_properties_guesser"/>
+      <argument type="service" id=".zenstruck_foundry.persistence_manager" on-invalid="null"/>
+      <argument type="service" id=".zenstruck_foundry.maker.factory.factory_class_map"/>
+      <argument type="service" id=".zenstruck_foundry.maker.factory.generator"/>
+    </service>
+    <service id=".zenstruck_foundry.maker.factory.doctrine_scalar_fields_default_properties_guesser" class="Zenstruck\Foundry\Maker\Factory\DoctrineScalarFieldsDefaultPropertiesGuesser">
+      <tag name="foundry.make_factory.default_properties_guesser"/>
+      <argument type="service" id=".zenstruck_foundry.persistence_manager" on-invalid="null"/>
+      <argument type="service" id=".zenstruck_foundry.maker.factory.factory_class_map"/>
+      <argument type="service" id=".zenstruck_foundry.maker.factory.generator"/>
+    </service>
+    <service id=".zenstruck_foundry.maker.factory.object_default_properties_guesser" class="Zenstruck\Foundry\Maker\Factory\ObjectDefaultPropertiesGuesser">
+      <tag name="foundry.make_factory.default_properties_guesser"/>
+      <argument type="service" id=".zenstruck_foundry.maker.factory.factory_class_map"/>
+      <argument type="service" id=".zenstruck_foundry.maker.factory.generator"/>
+    </service>
+    <service id=".zenstruck_foundry.maker.factory.factory_class_map" class="Zenstruck\Foundry\Maker\Factory\FactoryClassMap">
+      <argument type="tagged_iterator" tag="foundry.factory"/>
+    </service>
+    <service id=".zenstruck_foundry.maker.factory.generator" class="Zenstruck\Foundry\Maker\Factory\FactoryGenerator">
+      <argument type="service" id=".zenstruck_foundry.persistence_manager" on-invalid="null"/>
+      <argument type="service" id="kernel"/>
+      <argument type="tagged_iterator" tag="foundry.make_factory.default_properties_guesser"/>
+      <argument type="service" id=".zenstruck_foundry.maker.factory.factory_class_map"/>
+      <argument type="service" id=".zenstruck_foundry.maker.namespace_guesser"/>
+      <argument>false</argument>
+    </service>
+    <service id=".zenstruck_foundry.maker.factory.autoCompleter" class="Zenstruck\Foundry\Maker\Factory\NoPersistenceObjectsAutoCompleter">
+      <argument>/home/khadidja/git/biblios</argument>
+    </service>
+    <service id=".zenstruck_foundry.maker.factory.candidate_classes_extractor" class="Zenstruck\Foundry\Maker\Factory\FactoryCandidatesClassesExtractor">
+      <argument type="service" id=".zenstruck_foundry.persistence_manager" on-invalid="null"/>
+      <argument type="service" id=".zenstruck_foundry.maker.factory.factory_class_map"/>
+    </service>
+    <service id=".zenstruck_foundry.maker.namespace_guesser" class="Zenstruck\Foundry\Maker\NamespaceGuesser">
+      <argument type="service" id=".zenstruck_foundry.persistence_manager" on-invalid="null"/>
+    </service>
+    <service id=".zenstruck_foundry.persistence_manager" class="Zenstruck\Foundry\Persistence\PersistenceManager">
+      <argument type="tagged_iterator" tag=".foundry.persistence_strategy"/>
+      <argument type="service" id=".zenstruck_foundry.persistence.reset_database_manager"/>
+    </service>
+    <service id=".zenstruck_foundry.persistence.reset_database_manager" class="Zenstruck\Foundry\Persistence\ResetDatabase\ResetDatabaseManager">
+      <argument type="tagged_iterator" tag=".foundry.persistence.database_resetter"/>
+      <argument type="tagged_iterator" tag=".foundry.persistence.schema_resetter"/>
+    </service>
+    <service id=".zenstruck_foundry.command.load_fixtures" class="Zenstruck\Foundry\Command\LoadFixturesCommand">
+      <tag name="console.command" command="foundry:load-fixtures|foundry:load-stories|foundry:load-story" description="Load stories which are marked with #[AsFixture] attribute."/>
+      <tag name="container.no_preload"/>
+      <argument type="collection">
+        <argument key="main">App\Story\AppStory</argument>
+      </argument>
+      <argument type="collection"/>
+      <argument type="tagged_iterator" tag=".foundry.persistence.database_resetter"/>
+      <argument type="service" id="kernel"/>
+      <call method="setName">
+        <argument>foundry:load-fixtures</argument>
+      </call>
+      <call method="setAliases">
+        <argument type="collection">
+          <argument>foundry:load-stories</argument>
+          <argument>foundry:load-story</argument>
+        </argument>
+      </call>
+      <call method="setDescription">
+        <argument>Load stories which are marked with #[AsFixture] attribute.</argument>
+      </call>
+    </service>
+    <service id=".zenstruck_foundry.persistence_strategy.orm" class="Zenstruck\Foundry\ORM\OrmV3PersistenceStrategy">
+      <tag name=".foundry.persistence_strategy"/>
+      <argument type="service" id="doctrine"/>
+    </service>
+    <service id=".zenstruck_foundry.persistence.database_resetter.orm.abstract" class="Zenstruck\Foundry\ORM\ResetDatabase\BaseOrmResetter" abstract="true">
+      <argument type="service" id="doctrine"/>
+      <argument type="collection">
+        <argument>default</argument>
+      </argument>
+      <argument type="collection">
+        <argument>default</argument>
+      </argument>
+    </service>
+    <service id="Zenstruck\Foundry\ORM\ResetDatabase\OrmResetter" class="Zenstruck\Foundry\ORM\ResetDatabase\SchemaDatabaseResetter">
+      <tag name=".foundry.persistence.database_resetter"/>
+      <tag name=".foundry.persistence.schema_resetter"/>
+      <argument type="service" id="doctrine"/>
+      <argument type="collection">
+        <argument>default</argument>
+      </argument>
+      <argument type="collection">
+        <argument>default</argument>
+      </argument>
+    </service>
+    <service id=".zenstruck_foundry.in_memory.factory_registry" class="Zenstruck\Foundry\InMemory\InMemoryFactoryRegistry">
+      <tag name="container.decorator" id=".zenstruck_foundry.factory_registry" inner=".zenstruck_foundry.in_memory.factory_registry.inner"/>
+      <argument type="service" id=".zenstruck_foundry.in_memory.factory_registry.inner"/>
+    </service>
+    <service id=".zenstruck_foundry.in_memory.repository_registry" class="Zenstruck\Foundry\InMemory\InMemoryRepositoryRegistry">
+      <argument type="service" id=".service_locator.dpiLQ5O"/>
+    </service>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\Admin\AuthorController" class="App\Controller\Admin\AuthorController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\Admin\AuthorController" class="App\Controller\Admin\AuthorController" autowire="true" abstract="true"/>
     <service id=".instanceof.App\Controller\Admin\AuthorController.0.App\Controller\Admin\AuthorController" class="App\Controller\Admin\AuthorController" autowire="true" abstract="true"/>
@@ -7926,6 +8340,10 @@
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\Admin\EditorController" class="App\Controller\Admin\EditorController" autowire="true" abstract="true"/>
     <service id=".instanceof.App\Controller\Admin\EditorController.0.App\Controller\Admin\EditorController" class="App\Controller\Admin\EditorController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\Admin\EditorController" class="App\Controller\Admin\EditorController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\Admin\MainController" class="App\Controller\Admin\MainController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\Admin\MainController" class="App\Controller\Admin\MainController" autowire="true" abstract="true"/>
+    <service id=".instanceof.App\Controller\Admin\MainController.0.App\Controller\Admin\MainController" class="App\Controller\Admin\MainController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\Admin\MainController" class="App\Controller\Admin\MainController" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\BookController" class="App\Controller\BookController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\BookController" class="App\Controller\BookController" autowire="true" abstract="true"/>
     <service id=".instanceof.App\Controller\BookController.0.App\Controller\BookController" class="App\Controller\BookController" autowire="true" abstract="true"/>
@@ -7934,6 +8352,16 @@
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\MainController" class="App\Controller\MainController" autowire="true" abstract="true"/>
     <service id=".instanceof.App\Controller\MainController.0.App\Controller\MainController" class="App\Controller\MainController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\MainController" class="App\Controller\MainController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\RegistrationController" class="App\Controller\RegistrationController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\RegistrationController" class="App\Controller\RegistrationController" autowire="true" abstract="true"/>
+    <service id=".instanceof.App\Controller\RegistrationController.0.App\Controller\RegistrationController" class="App\Controller\RegistrationController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\RegistrationController" class="App\Controller\RegistrationController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\SecurityController" class="App\Controller\SecurityController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\SecurityController" class="App\Controller\SecurityController" autowire="true" abstract="true"/>
+    <service id=".instanceof.App\Controller\SecurityController.0.App\Controller\SecurityController" class="App\Controller\SecurityController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\SecurityController" class="App\Controller\SecurityController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\FixturesBundle\ORMFixtureInterface.0.App\DataFixtures\AppFixtures" class="App\DataFixtures\AppFixtures" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\DataFixtures\AppFixtures" class="App\DataFixtures\AppFixtures" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.App\Entity\Author.0.App\Entity\Author" class="App\Entity\Author" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Entity\Author" class="App\Entity\Author" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.App\Entity\Book.0.App\Entity\Book" class="App\Entity\Book" autowire="true" abstract="true"/>
@@ -7942,16 +8370,24 @@
     <service id=".abstract.instanceof.App\Entity\Comment" class="App\Entity\Comment" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.App\Entity\Editor.0.App\Entity\Editor" class="App\Entity\Editor" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Entity\Editor" class="App\Entity\Editor" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.App\Entity\User.0.App\Entity\User" class="App\Entity\User" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Entity\User" class="App\Entity\User" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.UnitEnum.0.App\Enum\BookStatus" class="App\Enum\BookStatus" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Enum\BookStatus" class="App\Enum\BookStatus" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.UnitEnum.0.App\Enum\CommentStatus" class="App\Enum\CommentStatus" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Enum\CommentStatus" class="App\Enum\CommentStatus" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.App\EventListener\LastConnectionListener.0.App\EventListener\LastConnectionListener" class="App\EventListener\LastConnectionListener" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\EventListener\LastConnectionListener" class="App\EventListener\LastConnectionListener" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.App\EventListener\MaintenanceListener.0.App\EventListener\MaintenanceListener" class="App\EventListener\MaintenanceListener" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\EventListener\MaintenanceListener" class="App\EventListener\MaintenanceListener" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\AuthorType" class="App\Form\AuthorType" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\AuthorType" class="App\Form\AuthorType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\BookType" class="App\Form\BookType" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\BookType" class="App\Form\BookType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\EditorType" class="App\Form\EditorType" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Form\EditorType" class="App\Form\EditorType" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\RegistrationFormType" class="App\Form\RegistrationFormType" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Form\RegistrationFormType" class="App\Form\RegistrationFormType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\AuthorRepository" class="App\Repository\AuthorRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\AuthorRepository" class="App\Repository\AuthorRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\BookRepository" class="App\Repository\BookRepository" autowire="true" abstract="true"/>
@@ -7960,6 +8396,13 @@
     <service id=".abstract.instanceof.App\Repository\CommentRepository" class="App\Repository\CommentRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\EditorRepository" class="App\Repository\EditorRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\EditorRepository" class="App\Repository\EditorRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\UserRepository" class="App\Repository\UserRepository" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Repository\UserRepository" class="App\Repository\UserRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Security\Core\Authorization\Voter\VoterInterface.0.App\Security\Voter\BookCreatorVoter" class="App\Security\Voter\BookCreatorVoter" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Security\Voter\BookCreatorVoter" class="App\Security\Voter\BookCreatorVoter" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Zenstruck\Foundry\Story.0.App\Story\AppStory" class="App\Story\AppStory" autowire="true" abstract="true"/>
+    <service id=".instanceof.App\Story\AppStory.0.App\Story\AppStory" class="App\Story\AppStory" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Story\AppStory" class="App\Story\AppStory" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".service_locator.ryAvHi4" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -8012,6 +8455,22 @@
         <argument>0</argument>
       </call>
       <call method="addListener">
+        <argument>Symfony\Component\Security\Http\Event\LogoutEvent</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="security.logout.listener.default.main"/>
+          <argument>onLogout</argument>
+        </argument>
+        <argument>64</argument>
+      </call>
+      <call method="addListener">
+        <argument>Symfony\Component\Security\Http\Event\LogoutEvent</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="security.logout.listener.session.main"/>
+          <argument>onLogout</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
         <argument>Symfony\Component\Security\Http\Event\CheckPassportEvent</argument>
         <argument type="collection">
           <argument type="service_closure" id="security.listener.user_checker.main"/>
@@ -8026,6 +8485,14 @@
           <argument>postCheckCredentials</argument>
         </argument>
         <argument>256</argument>
+      </call>
+      <call method="addListener">
+        <argument>security.interactive_login</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="App\EventListener\LastConnectionListener"/>
+          <argument>onSecurityInteractiveLogin</argument>
+        </argument>
+        <argument>0</argument>
       </call>
       <call method="addListener">
         <argument>Symfony\Component\Security\Http\Event\CheckPassportEvent</argument>
@@ -8460,6 +8927,34 @@
         <argument>Create a new Webhook</argument>
       </call>
     </service>
+    <service id="maker.auto_command.make_story" class="Symfony\Bundle\MakerBundle\Command\MakerCommand">
+      <tag name="console.command" command="make:story" description="Creates a Foundry story"/>
+      <tag name="container.no_preload"/>
+      <argument type="service" id=".zenstruck_foundry.maker.story"/>
+      <argument type="service" id="maker.file_manager"/>
+      <argument type="service" id="maker.generator"/>
+      <argument type="service" id="maker.template_linter"/>
+      <call method="setName">
+        <argument>make:story</argument>
+      </call>
+      <call method="setDescription">
+        <argument>Creates a Foundry story</argument>
+      </call>
+    </service>
+    <service id="maker.auto_command.make_factory" class="Symfony\Bundle\MakerBundle\Command\MakerCommand">
+      <tag name="console.command" command="make:factory" description="Creates a Foundry model factory for a Doctrine entity class or a regular object"/>
+      <tag name="container.no_preload"/>
+      <argument type="service" id=".zenstruck_foundry.maker.factory"/>
+      <argument type="service" id="maker.file_manager"/>
+      <argument type="service" id="maker.generator"/>
+      <argument type="service" id="maker.template_linter"/>
+      <call method="setName">
+        <argument>make:factory</argument>
+      </call>
+      <call method="setDescription">
+        <argument>Creates a Foundry model factory for a Doctrine entity class or a regular object</argument>
+      </call>
+    </service>
     <service id=".service_locator.1vYpZ1B" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -8592,7 +9087,32 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.OoZL9MQ" method="withContext"/>
     </service>
-    <service id=".service_locator.EkHMA4H" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.3FWkHlB" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="userPasswordHasher" type="service_closure" id="security.user_password_hasher"/>
+        <argument key="entityManager" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+      </argument>
+    </service>
+    <service id=".service_locator.3FWkHlB.App\Controller\RegistrationController::register()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\RegistrationController::register()"/>
+      <argument>App\Controller\RegistrationController::register()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.3FWkHlB" method="withContext"/>
+    </service>
+    <service id=".service_locator.0MQaTBY" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="authenticationUtils" type="service_closure" id="security.authentication_utils"/>
+      </argument>
+    </service>
+    <service id=".service_locator.0MQaTBY.App\Controller\SecurityController::login()" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\SecurityController::login()"/>
+      <argument>App\Controller\SecurityController::login()</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.0MQaTBY" method="withContext"/>
+    </service>
+    <service id=".service_locator.y5Bx.Ai" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.1vYpZ1B.kernel::registerContainerConfiguration()"/>
@@ -8606,6 +9126,8 @@
         <argument key="App\Controller\Admin\EditorController::index" type="service_closure" id=".service_locator.N1Wj5LA.App\Controller\Admin\EditorController::index()"/>
         <argument key="App\Controller\Admin\EditorController::new" type="service_closure" id=".service_locator.kaexKkG.App\Controller\Admin\EditorController::new()"/>
         <argument key="App\Controller\BookController::index" type="service_closure" id=".service_locator.P.Hw848.App\Controller\BookController::index()"/>
+        <argument key="App\Controller\RegistrationController::register" type="service_closure" id=".service_locator.3FWkHlB.App\Controller\RegistrationController::register()"/>
+        <argument key="App\Controller\SecurityController::login" type="service_closure" id=".service_locator.0MQaTBY.App\Controller\SecurityController::login()"/>
         <argument key="kernel:registerContainerConfiguration" type="service_closure" id=".service_locator.1vYpZ1B.kernel::registerContainerConfiguration()"/>
         <argument key="kernel:loadRoutes" type="service_closure" id=".service_locator.1vYpZ1B.kernel::loadRoutes()"/>
         <argument key="App\Controller\Admin\AuthorController:index" type="service_closure" id=".service_locator.AJ36o_l.App\Controller\Admin\AuthorController::index()"/>
@@ -8615,6 +9137,8 @@
         <argument key="App\Controller\Admin\EditorController:index" type="service_closure" id=".service_locator.N1Wj5LA.App\Controller\Admin\EditorController::index()"/>
         <argument key="App\Controller\Admin\EditorController:new" type="service_closure" id=".service_locator.kaexKkG.App\Controller\Admin\EditorController::new()"/>
         <argument key="App\Controller\BookController:index" type="service_closure" id=".service_locator.P.Hw848.App\Controller\BookController::index()"/>
+        <argument key="App\Controller\RegistrationController:register" type="service_closure" id=".service_locator.3FWkHlB.App\Controller\RegistrationController::register()"/>
+        <argument key="App\Controller\SecurityController:login" type="service_closure" id=".service_locator.0MQaTBY.App\Controller\SecurityController::login()"/>
       </argument>
     </service>
     <service id=".service_locator.DA6YX9k" class="Symfony\Component\DependencyInjection\ServiceLocator">
@@ -8805,12 +9329,13 @@
       <argument type="service" id="argument_resolver.query_parameter_value_resolver"/>
       <argument type="service" id="debug.stopwatch"/>
     </service>
-    <service id=".service_locator.271EfPH" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.DnFTnaX" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Form\AuthorType" type="service_closure" id="App\Form\AuthorType"/>
         <argument key="App\Form\BookType" type="service_closure" id="App\Form\BookType"/>
         <argument key="App\Form\EditorType" type="service_closure" id="App\Form\EditorType"/>
+        <argument key="App\Form\RegistrationFormType" type="service_closure" id="App\Form\RegistrationFormType"/>
         <argument key="Symfony\Component\Form\Extension\Core\Type\FormType" type="service_closure" id="form.type.form"/>
         <argument key="Symfony\Component\Form\Extension\Core\Type\ChoiceType" type="service_closure" id="form.type.choice"/>
         <argument key="Symfony\Component\Form\Extension\Core\Type\FileType" type="service_closure" id="form.type.file"/>
@@ -8959,13 +9484,14 @@
         <argument key="turbo.doctrine.event_listener" type="service_closure" id="turbo.doctrine.event_listener"/>
       </argument>
     </service>
-    <service id=".service_locator.mk8GD2W" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.9ZxtI0f" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Repository\AuthorRepository" type="service_closure" id="App\Repository\AuthorRepository"/>
         <argument key="App\Repository\BookRepository" type="service_closure" id="App\Repository\BookRepository"/>
         <argument key="App\Repository\CommentRepository" type="service_closure" id="App\Repository\CommentRepository"/>
         <argument key="App\Repository\EditorRepository" type="service_closure" id="App\Repository\EditorRepository"/>
+        <argument key="App\Repository\UserRepository" type="service_closure" id="App\Repository\UserRepository"/>
       </argument>
     </service>
     <service id=".service_locator.W55Po6X" class="Symfony\Component\DependencyInjection\ServiceLocator">
@@ -9009,8 +9535,8 @@
       <argument type="service" id="security.access.authenticated_voter"/>
       <argument type="service" id="debug.event_dispatcher"/>
     </service>
-    <service id=".debug.security.voter.security.access.simple_role_voter" class="Symfony\Component\Security\Core\Authorization\Voter\TraceableVoter">
-      <argument type="service" id="security.access.simple_role_voter"/>
+    <service id=".debug.security.voter.security.access.role_hierarchy_voter" class="Symfony\Component\Security\Core\Authorization\Voter\TraceableVoter">
+      <argument type="service" id="security.access.role_hierarchy_voter"/>
       <argument type="service" id="debug.event_dispatcher"/>
     </service>
     <service id=".debug.security.voter.security.access.expression_voter" class="Symfony\Component\Security\Core\Authorization\Voter\TraceableVoter">
@@ -9019,6 +9545,10 @@
     </service>
     <service id=".debug.security.voter.security.access.closure_voter" class="Symfony\Component\Security\Core\Authorization\Voter\TraceableVoter">
       <argument type="service" id="security.access.closure_voter"/>
+      <argument type="service" id="debug.event_dispatcher"/>
+    </service>
+    <service id=".debug.security.voter.App\Security\Voter\BookCreatorVoter" class="Symfony\Component\Security\Core\Authorization\Voter\TraceableVoter">
+      <argument type="service" id="App\Security\Voter\BookCreatorVoter"/>
       <argument type="service" id="debug.event_dispatcher"/>
     </service>
     <service id="security.listener.csrf_protection" class="Symfony\Component\Security\Http\EventListener\CsrfProtectionListener">
@@ -9215,6 +9745,10 @@
         <argument key="twig" type="service_closure" id="pagerfanta.view.twig"/>
       </argument>
     </service>
+    <service id=".service_locator.dpiLQ5O" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection"/>
+    </service>
     <service id=".service_locator.6KVxCv0" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -9265,6 +9799,12 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.TJNRSaV" method="withContext"/>
     </service>
+    <service id=".service_locator.TJNRSaV.App\Controller\Admin\MainController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\Admin\MainController"/>
+      <argument>App\Controller\Admin\MainController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.TJNRSaV" method="withContext"/>
+    </service>
     <service id=".service_locator.TJNRSaV.App\Controller\BookController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\BookController"/>
       <argument>App\Controller\BookController</argument>
@@ -9274,6 +9814,18 @@
     <service id=".service_locator.TJNRSaV.App\Controller\MainController" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator_context" id="App\Controller\MainController"/>
       <argument>App\Controller\MainController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.TJNRSaV" method="withContext"/>
+    </service>
+    <service id=".service_locator.TJNRSaV.App\Controller\RegistrationController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\RegistrationController"/>
+      <argument>App\Controller\RegistrationController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.TJNRSaV" method="withContext"/>
+    </service>
+    <service id=".service_locator.TJNRSaV.App\Controller\SecurityController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\SecurityController"/>
+      <argument>App\Controller\SecurityController</argument>
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.TJNRSaV" method="withContext"/>
     </service>
@@ -9355,10 +9907,6 @@
       <argument type="collection">
         <argument key="reverse_container" type="service_closure" id="reverse_container" on-invalid="ignore_uninitialized"/>
       </argument>
-    </service>
-    <service id=".service_locator.dpiLQ5O" class="Symfony\Component\DependencyInjection\ServiceLocator">
-      <tag name="container.service_locator"/>
-      <argument type="collection"/>
     </service>
     <service id=".service_locator.6eloqTE" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
@@ -9479,8 +10027,11 @@
           <argument>App\Controller\Admin\AuthorController</argument>
           <argument>App\Controller\Admin\BookController</argument>
           <argument>App\Controller\Admin\EditorController</argument>
+          <argument>App\Controller\Admin\MainController</argument>
           <argument>App\Controller\BookController</argument>
           <argument>App\Controller\MainController</argument>
+          <argument>App\Controller\RegistrationController</argument>
+          <argument>App\Controller\SecurityController</argument>
           <argument>Doctrine\Bundle\DoctrineBundle\Controller\ProfilerController</argument>
         </argument>
       </call>
@@ -9685,9 +10236,10 @@
     <service id="debug.security.access.decision_manager.inner" class="Symfony\Component\Security\Core\Authorization\AccessDecisionManager">
       <argument type="iterator">
         <argument type="service" id=".debug.security.voter.security.access.authenticated_voter"/>
-        <argument type="service" id=".debug.security.voter.security.access.simple_role_voter"/>
+        <argument type="service" id=".debug.security.voter.security.access.role_hierarchy_voter"/>
         <argument type="service" id=".debug.security.voter.security.access.expression_voter"/>
         <argument type="service" id=".debug.security.voter.security.access.closure_voter"/>
+        <argument type="service" id=".debug.security.voter.App\Security\Voter\BookCreatorVoter"/>
       </argument>
       <argument type="service">
         <service class="Symfony\Component\Security\Core\Authorization\Strategy\AffirmativeStrategy">
@@ -9697,6 +10249,9 @@
     </service>
     <service id="debug.security.firewall.authenticator.main.inner" class="Symfony\Component\Security\Http\Firewall\AuthenticatorManagerListener">
       <argument type="service" id="security.authenticator.manager.main"/>
+    </service>
+    <service id=".zenstruck_foundry.in_memory.factory_registry.inner" class="Zenstruck\Foundry\FactoryRegistry">
+      <argument type="tagged_iterator" tag="foundry.factory"/>
     </service>
     <service id="debug.security.event_dispatcher.main.inner" class="Symfony\Component\EventDispatcher\EventDispatcher"/>
     <service id="debug.traced.messenger.bus.default.inner" class="Symfony\Component\Messenger\MessageBus">
@@ -10238,6 +10793,16 @@
       <argument>false</argument>
       <argument type="service_closure" id="security.command.role_hierarchy_dump"/>
     </service>
+    <service id="..zenstruck_foundry.command.load_fixtures.lazy" class="Symfony\Component\Console\Command\LazyCommand">
+      <argument>foundry:load-fixtures</argument>
+      <argument type="collection">
+        <argument>foundry:load-stories</argument>
+        <argument>foundry:load-story</argument>
+      </argument>
+      <argument>Load stories which are marked with #[AsFixture] attribute.</argument>
+      <argument>false</argument>
+      <argument type="service_closure" id=".zenstruck_foundry.command.load_fixtures"/>
+    </service>
     <service id=".maker.auto_command.make_auth.lazy" class="Symfony\Component\Console\Command\LazyCommand">
       <argument>make:auth</argument>
       <argument type="collection"/>
@@ -10432,9 +10997,23 @@
       <argument>false</argument>
       <argument type="service_closure" id="maker.auto_command.make_webhook"/>
     </service>
+    <service id=".maker.auto_command.make_story.lazy" class="Symfony\Component\Console\Command\LazyCommand">
+      <argument>make:story</argument>
+      <argument type="collection"/>
+      <argument>Creates a Foundry story</argument>
+      <argument>false</argument>
+      <argument type="service_closure" id="maker.auto_command.make_story"/>
+    </service>
+    <service id=".maker.auto_command.make_factory.lazy" class="Symfony\Component\Console\Command\LazyCommand">
+      <argument>make:factory</argument>
+      <argument type="collection"/>
+      <argument>Creates a Foundry model factory for a Doctrine entity class or a regular object</argument>
+      <argument>false</argument>
+      <argument type="service_closure" id="maker.auto_command.make_factory"/>
+    </service>
     <service id="console.command_loader" class="Symfony\Component\Console\CommandLoader\ContainerCommandLoader" public="true">
       <tag name="container.no_preload"/>
-      <argument type="service" id=".service_locator.xHBqQc."/>
+      <argument type="service" id=".service_locator.Vdl72vs"/>
       <argument type="collection">
         <argument key="about">console.command.about</argument>
         <argument key="assets:install">console.command.assets_install</argument>
@@ -10527,6 +11106,10 @@
         <argument key="debug:firewall">security.command.debug_firewall</argument>
         <argument key="security:hash-password">security.command.user_password_hash</argument>
         <argument key="debug:security:role-hierarchy">security.command.role_hierarchy_dump</argument>
+        <argument key="doctrine:fixtures:load">doctrine.fixtures_load_command</argument>
+        <argument key="foundry:load-fixtures">.zenstruck_foundry.command.load_fixtures</argument>
+        <argument key="foundry:load-stories">.zenstruck_foundry.command.load_fixtures</argument>
+        <argument key="foundry:load-story">.zenstruck_foundry.command.load_fixtures</argument>
         <argument key="make:auth">maker.auto_command.make_auth</argument>
         <argument key="make:command">maker.auto_command.make_command</argument>
         <argument key="make:twig-component">maker.auto_command.make_twig_component</argument>
@@ -10557,9 +11140,11 @@
         <argument key="make:security:form-login">maker.auto_command.make_security_form_login</argument>
         <argument key="make:security:custom">maker.auto_command.make_security_custom</argument>
         <argument key="make:webhook">maker.auto_command.make_webhook</argument>
+        <argument key="make:story">maker.auto_command.make_story</argument>
+        <argument key="make:factory">maker.auto_command.make_factory</argument>
       </argument>
     </service>
-    <service id=".service_locator.xHBqQc." class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.Vdl72vs" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="console.command.about" type="service_closure" id=".console.command.about.lazy"/>
@@ -10653,6 +11238,8 @@
         <argument key="security.command.debug_firewall" type="service_closure" id=".security.command.debug_firewall.lazy"/>
         <argument key="security.command.user_password_hash" type="service_closure" id=".security.command.user_password_hash.lazy"/>
         <argument key="security.command.role_hierarchy_dump" type="service_closure" id=".security.command.role_hierarchy_dump.lazy"/>
+        <argument key="doctrine.fixtures_load_command" type="service_closure" id="doctrine.fixtures_load_command"/>
+        <argument key=".zenstruck_foundry.command.load_fixtures" type="service_closure" id="..zenstruck_foundry.command.load_fixtures.lazy"/>
         <argument key="maker.auto_command.make_auth" type="service_closure" id=".maker.auto_command.make_auth.lazy"/>
         <argument key="maker.auto_command.make_command" type="service_closure" id=".maker.auto_command.make_command.lazy"/>
         <argument key="maker.auto_command.make_twig_component" type="service_closure" id=".maker.auto_command.make_twig_component.lazy"/>
@@ -10680,6 +11267,8 @@
         <argument key="maker.auto_command.make_security_form_login" type="service_closure" id=".maker.auto_command.make_security_form_login.lazy"/>
         <argument key="maker.auto_command.make_security_custom" type="service_closure" id=".maker.auto_command.make_security_custom.lazy"/>
         <argument key="maker.auto_command.make_webhook" type="service_closure" id=".maker.auto_command.make_webhook.lazy"/>
+        <argument key="maker.auto_command.make_story" type="service_closure" id=".maker.auto_command.make_story.lazy"/>
+        <argument key="maker.auto_command.make_factory" type="service_closure" id=".maker.auto_command.make_factory.lazy"/>
       </argument>
     </service>
     <service id="cache.app.recorder_inner" class="Symfony\Component\Cache\Adapter\FilesystemAdapter">
@@ -10937,8 +11526,8 @@
     <service id="Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface" alias="security.user_password_hasher"/>
     <service id="Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface" alias="security.user_authenticator"/>
     <service id="security.firewall" alias="debug.security.firewall"/>
-    <service id="security.user_providers" alias="security.user.provider.concrete.users_in_memory"/>
-    <service id="Symfony\Component\Security\Core\User\UserProviderInterface" alias="security.user.provider.concrete.users_in_memory"/>
+    <service id="security.user_providers" alias="security.user.provider.concrete.app_user_provider"/>
+    <service id="Symfony\Component\Security\Core\User\UserProviderInterface" alias="security.user.provider.concrete.app_user_provider"/>
     <service id="security.authentication.session_strategy.main" alias="security.authentication.session_strategy"/>
     <service id="security.user_checker.main" alias="security.user_checker"/>
     <service id="security.firewall.context_locator" alias=".service_locator.Bz.C4As"/>
@@ -10947,9 +11536,10 @@
     <service id="Psr\Log\LoggerInterface" alias="monolog.logger"/>
     <service id="Pagerfanta\RouteGenerator\RouteGeneratorFactoryInterface" alias="pagerfanta.route_generator_factory"/>
     <service id="Pagerfanta\View\ViewFactoryInterface" alias="pagerfanta.view_factory"/>
+    <service id="doctrine.fixtures.provider" alias="doctrine.fixtures.loader"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.ryAvHi4" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.EkHMA4H"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.y5Bx.Ai"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.W55Po6X"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id=".Psr\Log\LoggerInterface $request.logger" alias="monolog.logger.request"/>
@@ -11003,6 +11593,7 @@
     <service id="turbo.broadcaster.imux" alias="turbo.broadcaster.action_renderer"/>
     <service id="security.access.decision_manager" alias="debug.security.access.decision_manager"/>
     <service id="security.firewall.authenticator.main" alias="debug.security.firewall.authenticator.main"/>
+    <service id=".zenstruck_foundry.factory_registry" alias=".zenstruck_foundry.in_memory.factory_registry"/>
     <service id="security.event_dispatcher.main" alias="debug.security.event_dispatcher.main"/>
     <service id="messenger.bus.default" alias="debug.traced.messenger.bus.default"/>
     <service id=".signing.messenger.default_serializer.inner" alias="messenger.transport.native_php_serializer"/>
@@ -11014,6 +11605,8 @@
     <service id=".service_locator.IzWrS4A" alias=".service_locator.gW3X0WI"/>
     <service id=".service_locator.vUaZqQ5" alias=".service_locator.N1Wj5LA"/>
     <service id=".service_locator.E17hKnD" alias=".service_locator.kaexKkG"/>
+    <service id=".service_locator.tPNZaCD" alias=".service_locator.3FWkHlB"/>
+    <service id=".service_locator.uBwBrvQ" alias=".service_locator.0MQaTBY"/>
     <service id=".service_locator.D6tJ4Px" alias=".service_locator.TJNRSaV"/>
   </services>
 </container>

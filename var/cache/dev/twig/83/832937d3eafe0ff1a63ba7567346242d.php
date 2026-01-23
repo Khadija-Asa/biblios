@@ -76,20 +76,53 @@ class __TwigTemplate_17076d3a190e15f88cd517c58ab27df0 extends Template
         <!-- Navigation-->
         <nav class=\"navbar navbar-expand-lg navbar-dark bg-dark fixed-top\" id=\"mainNav\">
             <div class=\"container px-4\">
-                <a class=\"navbar-brand\" href=\"#page-top\">Biblios</a>
+                <a class=\"navbar-brand\" href=\"";
+        // line 21
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_main");
+        yield "\">Biblios</a>
                 <button class=\"navbar-toggler\" type=\"button\" data-bs-toggle=\"collapse\" data-bs-target=\"#navbarResponsive\" aria-controls=\"navbarResponsive\" aria-expanded=\"false\" aria-label=\"Toggle navigation\"><span class=\"navbar-toggler-icon\"></span></button>
                 <div class=\"collapse navbar-collapse\" id=\"navbarResponsive\">
                     <ul class=\"navbar-nav ms-auto\">
-                        <li class=\"nav-item\"><a class=\"nav-link\" href=\"#\">Catalogue</a></li>
-                        <li class=\"nav-item\"><a class=\"nav-link\" href=\"#\">Se connecter</a></li>
-                    </ul>
+                        <li class=\"nav-item\"><a class=\"nav-link\" href=\"";
+        // line 25
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_book_index");
+        yield "\">Catalogue</a></li>
+                        ";
+        // line 26
+        if ((null === CoreExtension::getAttribute($this->env, $this->source, (isset($context["app"]) || array_key_exists("app", $context) ? $context["app"] : (function () { throw new RuntimeError('Variable "app" does not exist.', 26, $this->source); })()), "user", [], "any", false, false, false, 26))) {
+            // line 27
+            yield "                        <li class=\"nav-item\"><a class=\"nav-link\" href=\"";
+            yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_login");
+            yield "\">Se connecter</a></li>
+                        ";
+        }
+        // line 29
+        yield "                        ";
+        if ((($tmp = $this->extensions['Symfony\Bridge\Twig\Extension\SecurityExtension']->isGranted("IS_AUTHENTICATED")) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 30
+            yield "                            <li class=\"nav-item\"><a class=\"nav-link\" href=\"";
+            yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_admin_main_index");
+            yield "\">Administration</a></li>
+                        ";
+        }
+        // line 32
+        yield "                        ";
+        if ((($tmp = $this->extensions['Symfony\Bridge\Twig\Extension\SecurityExtension']->isGranted("ROLE_ADMIN")) && $tmp instanceof Markup ? (string) $tmp : $tmp)) {
+            // line 33
+            yield "                        <li class=\"nav-item\"><a class=\"nav-link\" href=\"";
+            yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_register");
+            yield "\">Nouvel utilisateur</a></li>
+                        ";
+        }
+        // line 35
+        yield "                    </ul>
                 </div>
             </div>
         </nav>
         ";
-        // line 31
+        // line 39
         yield from $this->unwrap()->yieldBlock('body', $context, $blocks);
-        // line 32
+        // line 40
         yield "        <!-- Footer-->
         <footer class=\"py-5 bg-dark\">
             <div class=\"container px-4\"><p class=\"m-0 text-center text-white\">Copyright &copy; Biblios</p></div>
@@ -201,7 +234,7 @@ class __TwigTemplate_17076d3a190e15f88cd517c58ab27df0 extends Template
         yield from [];
     }
 
-    // line 31
+    // line 39
     /**
      * @return iterable<null|scalar|\Stringable>
      */
@@ -234,9 +267,17 @@ class __TwigTemplate_17076d3a190e15f88cd517c58ab27df0 extends Template
     /**
      * @codeCoverageIgnore
      */
+    public function isTraitable(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
     public function getDebugInfo(): array
     {
-        return array (  205 => 31,  182 => 14,  171 => 15,  168 => 14,  155 => 13,  144 => 11,  131 => 10,  109 => 8,  93 => 32,  91 => 31,  74 => 16,  72 => 13,  69 => 12,  67 => 10,  62 => 8,  53 => 1,);
+        return array (  238 => 39,  215 => 14,  204 => 15,  201 => 14,  188 => 13,  177 => 11,  164 => 10,  142 => 8,  126 => 40,  124 => 39,  118 => 35,  112 => 33,  109 => 32,  103 => 30,  100 => 29,  94 => 27,  92 => 26,  88 => 25,  81 => 21,  74 => 16,  72 => 13,  69 => 12,  67 => 10,  62 => 8,  53 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -261,12 +302,20 @@ class __TwigTemplate_17076d3a190e15f88cd517c58ab27df0 extends Template
         <!-- Navigation-->
         <nav class=\"navbar navbar-expand-lg navbar-dark bg-dark fixed-top\" id=\"mainNav\">
             <div class=\"container px-4\">
-                <a class=\"navbar-brand\" href=\"#page-top\">Biblios</a>
+                <a class=\"navbar-brand\" href=\"{{ path('app_main') }}\">Biblios</a>
                 <button class=\"navbar-toggler\" type=\"button\" data-bs-toggle=\"collapse\" data-bs-target=\"#navbarResponsive\" aria-controls=\"navbarResponsive\" aria-expanded=\"false\" aria-label=\"Toggle navigation\"><span class=\"navbar-toggler-icon\"></span></button>
                 <div class=\"collapse navbar-collapse\" id=\"navbarResponsive\">
                     <ul class=\"navbar-nav ms-auto\">
-                        <li class=\"nav-item\"><a class=\"nav-link\" href=\"#\">Catalogue</a></li>
-                        <li class=\"nav-item\"><a class=\"nav-link\" href=\"#\">Se connecter</a></li>
+                        <li class=\"nav-item\"><a class=\"nav-link\" href=\"{{ path('app_book_index') }}\">Catalogue</a></li>
+                        {% if app.user is null %}
+                        <li class=\"nav-item\"><a class=\"nav-link\" href=\"{{ path('app_login') }}\">Se connecter</a></li>
+                        {% endif %}
+                        {% if is_granted('IS_AUTHENTICATED') %}
+                            <li class=\"nav-item\"><a class=\"nav-link\" href=\"{{ path('app_admin_main_index') }}\">Administration</a></li>
+                        {% endif %}
+                        {% if is_granted('ROLE_ADMIN') %}
+                        <li class=\"nav-item\"><a class=\"nav-link\" href=\"{{ path('app_register') }}\">Nouvel utilisateur</a></li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>

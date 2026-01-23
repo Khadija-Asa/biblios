@@ -26,12 +26,22 @@ class ComposerStaticInit75e7f8d848176580e9902a32f6f14640
         '6a47392539ca2329373e0d33e1dba053' => __DIR__ . '/..' . '/symfony/polyfill-intl-icu/bootstrap.php',
         'ec07570ca5a812141189b1fa81503674' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert/Functions.php',
         'a1105708a18b76903365ca1c4aa61b02' => __DIR__ . '/..' . '/symfony/translation/Resources/functions.php',
+        '4f9a1929b39ff2a6c1016427077d16f5' => __DIR__ . '/..' . '/zenstruck/foundry/src/functions.php',
+        '21978ed596d07828c426dc898e1f08e0' => __DIR__ . '/..' . '/zenstruck/foundry/src/Persistence/functions.php',
+        'ca84a4c3e5f01954347851fa47eaeaee' => __DIR__ . '/..' . '/zenstruck/foundry/src/symfony_console.php',
     );
 
     public static $prefixLengthsPsr4 = array (
         'p' =>
         array (
             'phpDocumentor\\Reflection\\' => 25,
+        ),
+        'Z' =>
+        array (
+            'Zenstruck\\Foundry\\Utils\\Rector\\' => 31,
+            'Zenstruck\\Foundry\\Psalm\\' => 24,
+            'Zenstruck\\Foundry\\' => 18,
+            'Zenstruck\\' => 10,
         ),
         'W' =>
         array (
@@ -138,6 +148,10 @@ class ComposerStaticInit75e7f8d848176580e9902a32f6f14640
             'Monolog\\' => 8,
             'Masterminds\\' => 12,
         ),
+        'F' =>
+        array (
+            'Faker\\' => 6,
+        ),
         'E' =>
         array (
             'Egulias\\EmailValidator\\' => 23,
@@ -153,9 +167,11 @@ class ComposerStaticInit75e7f8d848176580e9902a32f6f14640
             'Doctrine\\Deprecations\\' => 22,
             'Doctrine\\DBAL\\' => 14,
             'Doctrine\\Common\\Lexer\\' => 22,
+            'Doctrine\\Common\\DataFixtures\\' => 29,
             'Doctrine\\Common\\Collections\\' => 28,
             'Doctrine\\Common\\' => 16,
             'Doctrine\\Bundle\\MigrationsBundle\\' => 33,
+            'Doctrine\\Bundle\\FixturesBundle\\' => 31,
             'Doctrine\\Bundle\\DoctrineBundle\\' => 31,
             'DeepCopy\\' => 9,
         ),
@@ -180,6 +196,22 @@ class ComposerStaticInit75e7f8d848176580e9902a32f6f14640
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
             1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
             2 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
+        ),
+        'Zenstruck\\Foundry\\Utils\\Rector\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/zenstruck/foundry/utils/rector/src',
+        ),
+        'Zenstruck\\Foundry\\Psalm\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/zenstruck/foundry/utils/psalm',
+        ),
+        'Zenstruck\\Foundry\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/zenstruck/foundry/src',
+        ),
+        'Zenstruck\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/zenstruck/assert/src',
         ),
         'Webmozart\\Assert\\' =>
         array (
@@ -541,6 +573,10 @@ class ComposerStaticInit75e7f8d848176580e9902a32f6f14640
         array (
             0 => __DIR__ . '/..' . '/masterminds/html5/src',
         ),
+        'Faker\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/fakerphp/faker/src/Faker',
+        ),
         'Egulias\\EmailValidator\\' =>
         array (
             0 => __DIR__ . '/..' . '/egulias/email-validator/src',
@@ -581,6 +617,10 @@ class ComposerStaticInit75e7f8d848176580e9902a32f6f14640
         array (
             0 => __DIR__ . '/..' . '/doctrine/lexer/src',
         ),
+        'Doctrine\\Common\\DataFixtures\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/data-fixtures/src',
+        ),
         'Doctrine\\Common\\Collections\\' =>
         array (
             0 => __DIR__ . '/..' . '/doctrine/collections/src',
@@ -592,6 +632,10 @@ class ComposerStaticInit75e7f8d848176580e9902a32f6f14640
         'Doctrine\\Bundle\\MigrationsBundle\\' =>
         array (
             0 => __DIR__ . '/..' . '/doctrine/doctrine-migrations-bundle/src',
+        ),
+        'Doctrine\\Bundle\\FixturesBundle\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/doctrine-fixtures-bundle/src',
         ),
         'Doctrine\\Bundle\\DoctrineBundle\\' =>
         array (

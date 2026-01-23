@@ -21,8 +21,12 @@ return [
         '/admin/book/new' => [[['_route' => 'app_admin_book_new', '_controller' => 'App\\Controller\\Admin\\BookController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/admin/editor' => [[['_route' => 'app_admin_editor_index', '_controller' => 'App\\Controller\\Admin\\EditorController::index'], null, ['GET' => 0], null, false, false, null]],
         '/admin/editor/new' => [[['_route' => 'app_admin_editor_new', '_controller' => 'App\\Controller\\Admin\\EditorController::new'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
+        '/admin/main' => [[['_route' => 'app_admin_main_index', '_controller' => 'App\\Controller\\Admin\\MainController::index'], null, null, null, false, false, null]],
         '/book' => [[['_route' => 'app_book_index', '_controller' => 'App\\Controller\\BookController::index'], null, ['GET' => 0], null, false, false, null]],
         '/' => [[['_route' => 'app_main', '_controller' => 'App\\Controller\\MainController::index'], null, null, null, false, false, null]],
+        '/admin/user/new' => [[['_route' => 'app_register', '_controller' => 'App\\Controller\\RegistrationController::register'], null, null, null, false, false, null]],
+        '/login' => [[['_route' => 'app_login', '_controller' => 'App\\Controller\\SecurityController::login'], null, null, null, false, false, null]],
+        '/logout' => [[['_route' => 'app_logout', '_controller' => 'App\\Controller\\SecurityController::logout'], null, null, null, false, false, null]],
     ],
     [ // $regexpList
         0 => '{^(?'

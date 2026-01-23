@@ -100,9 +100,12 @@ class __TwigTemplate_c6978e3460e1f664a7c75cf2dfcc0bd1 extends Template
         yield "    <!-- Header-->
     <header class=\"bg-primary bg-gradient text-white\">
         <div class=\"container px-4 text-center\">
-            <h1 class=\"fw-bolder mt-5 pt-5\">Biblios</h1>
+            <h1 class=\"fw-bolder pt-5 mt-5\">Biblios</h1>
             <p class=\"lead\">Catalogue en ligne de la médiathèque de Trifouillis-les-Oies</p>
-            <a class=\"btn btn-lg btn-light\" href=\"#\">Parcourez le catalogue</a>
+            <a class=\"btn btn-lg btn-light\" href=\"";
+        // line 11
+        yield $this->extensions['Symfony\Bridge\Twig\Extension\RoutingExtension']->getPath("app_book_index");
+        yield "\">Parcourez le catalogue</a>
         </div>
     </header>
     <!-- About section-->
@@ -154,7 +157,7 @@ class __TwigTemplate_c6978e3460e1f664a7c75cf2dfcc0bd1 extends Template
      */
     public function getDebugInfo(): array
     {
-        return array (  100 => 6,  87 => 5,  64 => 3,  41 => 1,);
+        return array (  107 => 11,  100 => 6,  87 => 5,  64 => 3,  41 => 1,);
     }
 
     public function getSourceContext(): Source
@@ -167,9 +170,9 @@ class __TwigTemplate_c6978e3460e1f664a7c75cf2dfcc0bd1 extends Template
     <!-- Header-->
     <header class=\"bg-primary bg-gradient text-white\">
         <div class=\"container px-4 text-center\">
-            <h1 class=\"fw-bolder mt-5 pt-5\">Biblios</h1>
+            <h1 class=\"fw-bolder pt-5 mt-5\">Biblios</h1>
             <p class=\"lead\">Catalogue en ligne de la médiathèque de Trifouillis-les-Oies</p>
-            <a class=\"btn btn-lg btn-light\" href=\"#\">Parcourez le catalogue</a>
+            <a class=\"btn btn-lg btn-light\" href=\"{{ path('app_book_index') }}\">Parcourez le catalogue</a>
         </div>
     </header>
     <!-- About section-->
